@@ -2,8 +2,8 @@
   @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&display=swap');
 
   #kb-root {
-    --paper: #17171A;
-    --paper-card: #232327;
+    --paper: #212124;
+    --paper-card: #2C2C30;
     --ink: #F5F5F2;
     --ink-soft: #9A9A9E;
     --red: #F0544F;
@@ -15,6 +15,7 @@
     font-family: 'M PLUS Rounded 1c', 'Noto Sans JP', sans-serif;
     color: var(--ink);
     background: var(--paper);
+    color-scheme: dark;
     max-width: 420px;
     margin: 0 auto;
     min-height: 100vh;
@@ -156,6 +157,11 @@
   #kb-root .date-nav input[type="date"] {
     border: none; background: none; font-family: 'M PLUS Rounded 1c', sans-serif; font-weight: 700;
     font-size: 16px; color: var(--ink); text-align: center; flex: 1;
+    color-scheme: dark;
+  }
+  #kb-root .date-nav input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(1.4);
+    cursor: pointer;
   }
 
   #kb-root .kind-toggle {
@@ -240,13 +246,15 @@
     flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
     background: none; border: none; padding: 6px 0; cursor: pointer;
   }
+  #kb-root .nav-btn { position: relative; }
   #kb-root .nav-btn[data-page="savings"] { color: var(--red); }
   #kb-root .nav-btn[data-page="records"] { color: var(--moss); }
   #kb-root .nav-btn[data-page="credit"] { color: var(--blue); }
-  #kb-root .nav-btn .n-icon { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: 'M PLUS Rounded 1c', sans-serif; transition: 0.15s; }
-  #kb-root .nav-btn .n-text { font-size: 10px; letter-spacing: 0.05em; opacity: 0.8; transition: 0.15s; }
-  #kb-root .nav-btn.active .n-icon { background: currentColor; color: var(--paper); }
+  #kb-root .nav-btn .n-icon { width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid currentColor; display: flex; align-items: center; justify-content: center; font-size: 10px; font-family: 'M PLUS Rounded 1c', sans-serif; opacity: 0.85; transition: 0.15s; }
+  #kb-root .nav-btn .n-text { font-size: 10px; letter-spacing: 0.05em; opacity: 0.85; transition: 0.15s; }
+  #kb-root .nav-btn.active .n-icon { opacity: 1; border-width: 2px; }
   #kb-root .nav-btn.active .n-text { opacity: 1; font-weight: 700; }
+  #kb-root .nav-btn.active::after { content: ''; position: absolute; bottom: 2px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
 
   /* ---- Notice banner ---- */
   #kb-root #noticeBanner { padding: 0; }
@@ -262,6 +270,7 @@
   #kb-root .cal-toggle-btn {
     flex: 0 0 auto; width: 36px; padding: 0; border: 1px solid var(--line); border-radius: 6px;
     background: var(--paper-card); font-size: 14px; cursor: pointer; color: var(--ink);
+    display: flex; align-items: center; justify-content: center;
   }
   #kb-root .cal-toggle-btn.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
   #kb-root #calendarPanel { margin: 10px 20px 0; padding: 12px 14px; background: var(--paper-card); border: 1px solid var(--line); border-radius: 8px; }
@@ -400,7 +409,9 @@
       </select>
       <select id="filterCategory"><option value="all">カテゴリ：すべて</option></select>
       <select id="filterMethod"><option value="all">方法：すべて</option></select>
-      <button type="button" id="calToggleBtn" class="cal-toggle-btn" aria-label="カレンダー表示">🗓</button>
+      <button type="button" id="calToggleBtn" class="cal-toggle-btn" aria-label="カレンダー表示">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      </button>
     </div>
 
     <div id="calendarPanel" style="display:none;"></div>
