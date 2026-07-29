@@ -32,6 +32,7 @@
     position: relative;
     box-sizing: border-box;
     padding-bottom: 82px;
+    overflow-x: hidden;
   }
   #kb-root *, #kb-root *::before, #kb-root *::after { box-sizing: border-box; }
 
@@ -220,9 +221,9 @@
   #kb-root .btn-save { background: var(--ink); color: var(--paper); font-weight: 700; }
   #kb-root .btn-cancel-edit { background: var(--paper-card); border: 1px solid var(--line) !important; color: var(--ink-soft); display: none; }
 
-  #kb-root .filter-row { display: flex; gap: 8px; margin: 8px 20px 0; }
+  #kb-root .filter-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 8px 20px 0; }
   #kb-root .filter-row select {
-    flex: 1; padding: 8px 8px; font-size: 16px; border: 1px solid var(--line); border-radius: 6px;
+    min-width: 0; padding: 8px 8px; font-size: 16px; border: 1px solid var(--line); border-radius: 6px;
     background: var(--paper-card); color: var(--ink); font-family: 'Noto Sans JP', sans-serif;
   }
 
@@ -277,8 +278,8 @@
 
   /* ---- Calendar view ---- */
   #kb-root .cal-toggle-btn {
-    flex: 0 0 auto; width: 36px; padding: 0; border: 1px solid var(--line); border-radius: 6px;
-    background: var(--paper-card); font-size: 14px; cursor: pointer; color: var(--ink);
+    justify-self: start; width: 44px; height: 38px; padding: 0; border: 1px solid var(--line); border-radius: 6px;
+    background: var(--paper-card); font-size: 15px; cursor: pointer; color: var(--ink);
     display: flex; align-items: center; justify-content: center;
   }
   #kb-root .cal-toggle-btn.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
