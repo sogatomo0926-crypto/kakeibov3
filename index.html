@@ -896,12 +896,41 @@
   }
   function dateToStr(d) { return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate()); }
 
+  // The cycle that "today" currently falls inside (still open, not yet closed).
+  function currentOpenWindow(card, today) {
+    const y = today.getFullYear(), m = today.getMonth() + 1;
+    const closeThisMonth = closingDateObj(card, y, m);
+    let endDate;
+    if (today <= closeThisMonth) {
+      endDate = closeThisMonth;
+    } else {
+      const nm = addMonths(y, m, 1);
+      endDate = closingDateObj(card, nm.year, nm.month);
+    }
+    const endY = endDate.getFullYear(), endM = endDate.getMonth() + 1;
+    const pm = addMonths(endY, endM, -1);
+    const prevClose = closingDateObj(card, pm.year, pm.month);
+    const startDate = new Date(prevClose);
+    startDate.setDate(startDate.getDate() + 1);
+    return { startDate, endDate };
+  }
+  // The cycle immediately before the given window (already closed).
+  function previousWindow(card, win) {
+    const endDate = new Date(win.startDate);
+    endDate.setDate(endDate.getDate() - 1);
+    const y = endDate.getFullYear(), m = endDate.getMonth() + 1;
+    const pm = addMonths(y, m, -1);
+    const prevClose = closingDateObj(card, pm.year, pm.month);
+    const startDate = new Date(prevClose);
+    startDate.setDate(startDate.getDate() + 1);
+    return { startDate, endDate };
+  }
+
   function cardStats(methodKey, card) {
     const now = new Date();
-    const cy = now.getFullYear(), cmo = now.getMonth() + 1;
-    const winThis = statementWindow(card, cy, cmo);
-    const nextPay = addMonths(cy, cmo, 1);
-    const winNext = statementWindow(card, nextPay.year, nextPay.month);
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const winNext = currentOpenWindow(card, today); // still accumulating -> billed next
+    const winThis = previousWindow(card, winNext);  // already closed -> billed this cycle
     const thisList = entriesInWindow(methodKey, winThis);
     const nextList = entriesInWindow(methodKey, winNext);
     const thisMonthBilling = thisList.reduce((s,e)=>s+e.amount, 0);
@@ -911,15 +940,16 @@
     const limit = card.limit || 0;
     const available = limit - totalUnpaid;
 
+    const cy = now.getFullYear(), cmo = now.getMonth() + 1;
     const dim = daysInMonth(cy, cmo);
     const payDay = Math.min(card.paymentDay || dim, dim);
     let payDate = new Date(cy, cmo - 1, payDay);
-    if (payDate < new Date(now.getFullYear(), now.getMonth(), now.getDate())) {
+    if (payDate < today) {
       const nm = addMonths(cy, cmo, 1);
       const dim2 = daysInMonth(nm.year, nm.month);
       payDate = new Date(nm.year, nm.month - 1, Math.min(card.paymentDay || dim2, dim2));
     }
-    const daysUntilPay = Math.round((payDate - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+    const daysUntilPay = Math.round((payDate - today) / 86400000);
     const currentCycleKey = cy + '-' + pad(cmo);
     const paidThisCycle = card.lastPaidCycle === currentCycleKey;
 
